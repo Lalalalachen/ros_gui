@@ -75,6 +75,9 @@ private:
   QComboBox* fixed_box;
   QSpinBox* Cell_Count_Box;
   QComboBox* Grid_Color_Box;
+  qrviz* front_view;
+  qrviz* side_view;
+  qrviz* top_view;
 };
 
 }  // namespace ros_qt_demo

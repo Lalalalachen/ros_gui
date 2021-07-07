@@ -139,6 +139,9 @@ MainWindow::~MainWindow() {}
 void MainWindow::slot_display_tf(int state) {
   bool enable = state>1? true:false;
   myrviz->Display_TF(enable);
+  front_view->Display_TF(enable);
+  side_view->Display_TF(enable);
+  top_view->Display_TF(enable);
 }
 
 void MainWindow::slot_display_grid(int state) {
@@ -146,10 +149,16 @@ void MainWindow::slot_display_grid(int state) {
   QStringList qsl = Grid_Color_Box->currentText().split(";");
   QColor color = QColor(qsl[0].toInt(), qsl[1].toInt(), qsl[2].toInt());
   myrviz->Display_Grid(Cell_Count_Box->text().toInt(), color, enable);
+  front_view->Display_Grid(Cell_Count_Box->text().toInt(), color, enable);
+  side_view->Display_Grid(Cell_Count_Box->text().toInt(), color, enable);
+  top_view->Display_Grid(Cell_Count_Box->text().toInt(), color, enable);
 }
 
 void MainWindow::slot_treewidget_value_change(QString) {
   myrviz->Set_FixedFrame(fixed_box->currentText());
+  front_view->Set_FixedFrame(fixed_box->currentText());
+  side_view->Set_FixedFrame(fixed_box->currentText());
+  top_view->Set_FixedFrame(fixed_box->currentText());
 }
 
 void MainWindow::slot_roscore_output() {
@@ -214,6 +223,10 @@ void MainWindow::on_button_connect_clicked(bool check ) {
       ui.treeWidget->setEnabled(true);
       // init qrviz class
       myrviz = new qrviz(ui.layout_rviz);
+      // init qrviz class for three view
+      front_view = new qrviz(ui.layout_front);
+      side_view = new qrviz(ui.layout_side);
+      top_view = new qrviz(ui.layout_top);
 		}
 	} else {
 		if ( ! qnode.init(ui.line_edit_master->text().toStdString(),
@@ -229,6 +242,11 @@ void MainWindow::on_button_connect_clicked(bool check ) {
       ui.treeWidget->setEnabled(true);
       // init qrviz class
       myrviz = new qrviz(ui.layout_rviz);
+
+      // init qrviz class for three view
+      front_view = new qrviz(ui.layout_front);
+      side_view = new qrviz(ui.layout_side);
+      top_view = new qrviz(ui.layout_top);
 		}
 	}
 }
