@@ -128,6 +128,9 @@ MainWindow::MainWindow(int argc, char** argv, QWidget *parent)
     connect(ui.pushButton_exit_roscore, SIGNAL(clicked()), this, SLOT(slot_exit_roscore_clicked()));
     //connect(ui.quit_button, SIGNAL(clicked()), this, SLOT(slot_exit_roscore_clicked()));
 
+    //bag file path
+    connect(ui.pushButton_path, SIGNAL(clicked()), this, SLOT(slot_file_path()));
+
 }
 
 MainWindow::~MainWindow() {}
@@ -135,6 +138,32 @@ MainWindow::~MainWindow() {}
 /*****************************************************************************
 ** Implementation [Slots]
 *****************************************************************************/
+
+void MainWindow::slot_file_path() {
+  QString bag_file, bag_file_path;
+  bag_file = QFileDialog::getOpenFileName(this,
+                                          "Please choose a bag file",
+                                          "/",
+                                          "Bag Files(*.bag);;All(*.*");
+  if(bag_file != "") {
+    QFileInfo bag_file_info;
+    bag_file_info = QFileInfo(bag_file);
+    bag_file_path = bag_file_info.filePath();
+    ui.lineEdit_path->setText(bag_file_path);
+    // ros-launch nodes and play bag file
+    quick_cmd_bag = new QProcess();
+    quick_cmd_bag->start("bash");
+    quick_cmd_bag->write("rosbag play ");
+    quick_cmd_bag->write(bag_file_path.toLocal8Bit());
+    //quick_cmd_bag->write("/mnt/hgfs/VM-Ubuntu/Calibration/record.bag");
+    quick_cmd_bag->write(" -l\n");
+
+    quick_cmd_launch = new QProcess();
+    quick_cmd_launch->start("bash");
+    quick_cmd_launch->write("roslaunch temporary_calib_interface calib_vis_bag.launch\n");
+  }
+
+}
 
 void MainWindow::slot_display_tf(int state) {
   bool enable = state>1? true:false;
@@ -185,7 +214,7 @@ void MainWindow::slot_roscore_cmd_clicked() {
 }
 
 void MainWindow::slot_quick_cmd_clicked() {
-  QProcess *quick_cmd = new QProcess();
+  quick_cmd = new QProcess();
   quick_cmd->start("bash");
   quick_cmd->write(ui.textEdit_cmd->toPlainText().toLocal8Bit()+'\n');
 }
@@ -215,7 +244,7 @@ void MainWindow::on_button_connect_clicked(bool check ) {
 	if ( ui.checkbox_use_environment->isChecked() ) {
 		if ( !qnode.init() ) {
 			showNoMasterMessage();
-      // if cannot connect master, cannot use Global Options
+      // if cannot connect master, cannot use Display
       ui.treeWidget->setEnabled(false);
 		} else {
 			ui.button_connect->setEnabled(false);
@@ -227,6 +256,8 @@ void MainWindow::on_button_connect_clicked(bool check ) {
       front_view = new qrviz(ui.layout_front);
       side_view = new qrviz(ui.layout_side);
       top_view = new qrviz(ui.layout_top);
+
+
 		}
 	} else {
 		if ( ! qnode.init(ui.line_edit_master->text().toStdString(),
@@ -247,6 +278,8 @@ void MainWindow::on_button_connect_clicked(bool check ) {
       front_view = new qrviz(ui.layout_front);
       side_view = new qrviz(ui.layout_side);
       top_view = new qrviz(ui.layout_top);
+
+
 		}
 	}
 }
@@ -324,8 +357,7 @@ void MainWindow::WriteSettings() {
 
 void MainWindow::closeEvent(QCloseEvent *event)
 {
-  /*
-  if(roscore_cmd)
+  /*if(roscore_cmd)
   {
         roscore_cmd->close();
         roscore_cmd->waitForFinished();

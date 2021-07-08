@@ -19,6 +19,8 @@
 #include <QComboBox>
 #include "qrviz.hpp"
 #include <QSpinBox>
+#include <QFileDialog>
+#include <QFileInfo>
 /*****************************************************************************
 ** Namespace
 *****************************************************************************/
@@ -65,6 +67,7 @@ public Q_SLOTS:
     void slot_treewidget_value_change(QString);
     void slot_display_grid(int);
     void slot_display_tf(int);
+    void slot_file_path();
 
 private:
 	Ui::MainWindowDesign ui;
@@ -78,6 +81,9 @@ private:
   qrviz* front_view;
   qrviz* side_view;
   qrviz* top_view;
+  QProcess *quick_cmd;
+  QProcess *quick_cmd_bag;
+  QProcess *quick_cmd_launch;
 };
 
 }  // namespace ros_qt_demo
