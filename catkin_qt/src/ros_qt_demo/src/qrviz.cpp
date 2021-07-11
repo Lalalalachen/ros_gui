@@ -51,3 +51,13 @@ void qrviz::Display_TF(bool enable) {
 
   ROS_ASSERT(TF_ != nullptr);
 }
+
+void qrviz::Display_RobotModel(bool enable) {
+  if(RM_ != nullptr) {
+    delete RM_;
+    RM_ = nullptr;
+  }
+
+  RM_ = manager_->createDisplay("rviz/RobotModel", "myRM", enable);
+  ROS_ASSERT(RM_ !=nullptr);
+}

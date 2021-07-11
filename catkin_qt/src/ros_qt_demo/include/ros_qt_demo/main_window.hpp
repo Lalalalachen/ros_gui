@@ -67,6 +67,7 @@ public Q_SLOTS:
     void slot_treewidget_value_change(QString);
     void slot_display_grid(int);
     void slot_display_tf(int);
+    void slot_display_rm(int);
     void slot_file_path();
 
 private:

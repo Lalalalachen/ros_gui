@@ -116,6 +116,15 @@ MainWindow::MainWindow(int argc, char** argv, QWidget *parent)
     ui.treeWidget->addTopLevelItem(TF);
     ui.treeWidget->setItemWidget(TF, 1, TF_Check);
 
+    //RobotModel
+    QTreeWidgetItem* RM = new QTreeWidgetItem(QStringList() << "RobotModel");
+    //checkbox
+    QCheckBox* RM_Check = new QCheckBox();
+    connect(RM_Check, SIGNAL(stateChanged(int)), this, SLOT(slot_display_rm(int)));
+
+    ui.treeWidget->addTopLevelItem(RM);
+    ui.treeWidget->setItemWidget(RM, 1, RM_Check);
+
 
     //connect
     //image
@@ -163,6 +172,14 @@ void MainWindow::slot_file_path() {
     quick_cmd_launch->write("roslaunch temporary_calib_interface calib_vis_bag.launch\n");
   }
 
+}
+
+void MainWindow::slot_display_rm(int state) {
+  bool enable = state>1? true:false;
+  myrviz->Display_RobotModel(enable);
+  front_view->Display_RobotModel(enable);
+  side_view->Display_RobotModel(enable);
+  top_view->Display_RobotModel(enable);
 }
 
 void MainWindow::slot_display_tf(int state) {
