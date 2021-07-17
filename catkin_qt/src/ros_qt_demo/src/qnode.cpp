@@ -17,6 +17,7 @@
 #include <sstream>
 #include "../include/ros_qt_demo/qnode.hpp"
 
+
 /*****************************************************************************
 ** Namespaces
 *****************************************************************************/
@@ -51,6 +52,8 @@ bool QNode::init() {
 	// Add your ros communications here.
 	chatter_publisher = n.advertise<std_msgs::String>("chatter", 1000);
   chatter_subscriber = n.subscribe("chatter", 1000, &QNode::chatter_callback, this);
+  // to subscribe TF msg
+  tf2_ros::TransformListener listener(buffer);
   // call QNode::run() to start Qt thread
 	start();
 	return true;
@@ -70,10 +73,14 @@ bool QNode::init(const std::string &master_url, const std::string &host_url) {
 	// Add your ros communications here.
 	chatter_publisher = n.advertise<std_msgs::String>("chatter", 1000);
   chatter_subscriber = n.subscribe("chatter", 1000, &QNode::chatter_callback, this);
+  // to subscribe TF msg
+  tf2_ros::TransformListener listener(buffer);
   // call QNode::run() to start Qt thread
 	start();
 	return true;
 }
+
+
 
 // define image Subscribe pushbutton
 void QNode::sub_image(QString topic_name) {
@@ -139,6 +146,9 @@ void QNode::chatter_callback(const std_msgs::String &msg) {
 
 }
 
+// define a show status function
+
+
 void QNode::run() {
 	ros::Rate loop_rate(1);
 	int count = 0;
@@ -146,6 +156,7 @@ void QNode::run() {
 
 		std_msgs::String msg;
 		std::stringstream ss;
+
 		ss << "hello world " << count;
 		msg.data = ss.str();
     // publish msg
@@ -153,6 +164,39 @@ void QNode::run() {
     // use log to show info in logging window
 		log(Info,std::string("I sent: ")+msg.data);
     // loop waiting callback function
+
+    // evaluate tf msg
+    std::stringstream st;
+    tf2_ros::TransformListener listener(buffer);
+    try {
+      geometry_msgs::TransformStamped tfs = buffer.lookupTransform("camera_target_position",
+                                                                   "camera",
+                                                                   ros::Time(0));
+
+      //double t_error = 1.0; // translation error
+      //double r_error = 1.0; // rotation error
+      if(abs(tfs.transform.translation.x) < t_error &&
+         abs(tfs.transform.translation.y) < t_error &&
+         abs(tfs.transform.translation.z) < t_error &&
+         abs(tfs.transform.rotation.x) < r_error &&
+         abs(tfs.transform.rotation.y) < r_error &&
+         abs(tfs.transform.rotation.z) < r_error &&
+         abs(tfs.transform.rotation.w) < r_error ) {
+        st << "Reach the target!" << count;
+        status(Reach, st.str());
+      }
+      else {
+        st << "Keep move" << count;
+        status(Move, st.str());
+      }
+
+    } catch (const std::exception& e) {
+      ROS_INFO("Wrong info:%s",e.what());
+      st << "Wait for change" << count;
+      status(Wait, st.str());
+    }
+
+
 		ros::spinOnce();
 		loop_rate.sleep();
 		++count;
@@ -161,6 +205,28 @@ void QNode::run() {
 	Q_EMIT rosShutdown(); // used to signal the gui for a shutdown (useful to roslaunch)
 }
 
+//status
+void QNode::status(const Status &status, const std::string &st) {
+  status_model.insertRows(status_model.rowCount(),1);
+  std::stringstream status_model_st;
+  switch (status) {
+  case(Reach) : {
+    status_model_st << st;
+    break;
+  }
+  case(Move) : {
+    status_model_st << st;
+    break;
+  }
+  case(Wait) : {
+    status_model_st << st;
+    break;
+  }
+  }
+  QVariant new_row(QString(status_model_st.str().c_str()));
+  status_model.setData(status_model.index(status_model.rowCount()-1),new_row);
+  Q_EMIT statusUpdated(); // used to readjust the scrollbar
+}
 
 void QNode::log( const LogLevel &level, const std::string &msg) {
 	logging_model.insertRows(logging_model.rowCount(),1);

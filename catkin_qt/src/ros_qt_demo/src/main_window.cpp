@@ -52,7 +52,12 @@ MainWindow::MainWindow(int argc, char** argv, QWidget *parent)
         on_button_connect_clicked(true);
     }
 
-    //ui init
+    // status
+    ui.listView_tf->setModel(qnode.statusModel());
+    QObject::connect(&qnode, SIGNAL(statusUpdated()), this, SLOT(updateStatusView()));
+
+
+    //ui init for Display of rviz
     ui.treeWidget->setWindowTitle("Display");
     ui.treeWidget->setHeaderLabels(QStringList() << "key" << "value");
     ui.treeWidget->setHeaderHidden(true);
@@ -130,8 +135,7 @@ MainWindow::MainWindow(int argc, char** argv, QWidget *parent)
     //image
     connect(&qnode, SIGNAL(image_vel(QImage)), this, SLOT(slot_update_image(QImage)));
     connect(ui.pushButton_sub_image, SIGNAL(clicked()), this, SLOT(slot_sub_image()));
-    //quick command
-    connect(ui.pushButton_cmd, SIGNAL(clicked()), this, SLOT(slot_quick_cmd_clicked()));
+
     //roscore command
     connect(ui.pushButton_roscore, SIGNAL(clicked()), this, SLOT(slot_roscore_cmd_clicked()));
     connect(ui.pushButton_exit_roscore, SIGNAL(clicked()), this, SLOT(slot_exit_roscore_clicked()));
@@ -139,6 +143,9 @@ MainWindow::MainWindow(int argc, char** argv, QWidget *parent)
 
     //bag file path
     connect(ui.pushButton_path, SIGNAL(clicked()), this, SLOT(slot_file_path()));
+
+    //append status info
+
 
 }
 
@@ -167,9 +174,12 @@ void MainWindow::slot_file_path() {
     //quick_cmd_bag->write("/mnt/hgfs/VM-Ubuntu/Calibration/record.bag");
     quick_cmd_bag->write(" -l\n");
 
+
     quick_cmd_launch = new QProcess();
     quick_cmd_launch->start("bash");
     quick_cmd_launch->write("roslaunch temporary_calib_interface calib_vis_bag.launch\n");
+
+
   }
 
 }
@@ -230,11 +240,7 @@ void MainWindow::slot_roscore_cmd_clicked() {
           this, SLOT(slot_roscore_output()));
 }
 
-void MainWindow::slot_quick_cmd_clicked() {
-  quick_cmd = new QProcess();
-  quick_cmd->start("bash");
-  quick_cmd->write(ui.textEdit_cmd->toPlainText().toLocal8Bit()+'\n');
-}
+
 void MainWindow::slot_update_image(QImage im) {
   QSize laSize = ui.label_image->size();
   QImage image_scaled = im.scaled(laSize, Qt::IgnoreAspectRatio);
@@ -273,6 +279,7 @@ void MainWindow::on_button_connect_clicked(bool check ) {
       front_view = new qrviz(ui.layout_front);
       side_view = new qrviz(ui.layout_side);
       top_view = new qrviz(ui.layout_top);
+
 
 
 		}
@@ -325,6 +332,10 @@ void MainWindow::on_checkbox_use_environment_stateChanged(int state) {
  */
 void MainWindow::updateLoggingView() {
         ui.view_logging->scrollToBottom();
+}
+
+void MainWindow::updateStatusView() {
+  ui.listView_tf->scrollToBottom();
 }
 
 /*****************************************************************************

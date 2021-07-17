@@ -30,6 +30,11 @@
 #include <cv_bridge/cv_bridge.h>
 #include <sensor_msgs/image_encodings.h>
 #include <QImage>
+// to subscribe /tf
+#include "tf2_ros/transform_listener.h"
+#include "tf2_ros/buffer.h"
+#include "geometry_msgs/PointStamped.h"
+#include "tf2_geometry_msgs/tf2_geometry_msgs.h"
 /*****************************************************************************
 ** Namespaces
 *****************************************************************************/
@@ -49,6 +54,16 @@ public:
 	bool init(const std::string &master_url, const std::string &host_url);
   // image Subscribe pushbutton interface function
   void sub_image(QString topic_name);
+  // TF play bag file pushbutton interface function
+  enum Status {
+    Reach,
+    Move,
+    Wait
+  };
+  QStringListModel* statusModel() { return &status_model; }
+  void status( const Status &status, const std::string &st);
+  double t_error = 0.5; // translation error
+  double r_error = 0.5; // rotation error
 	void run();
 
 	/*********************
@@ -69,14 +84,21 @@ Q_SIGNALS:
 	void loggingUpdated();
     void rosShutdown();
     void image_vel(QImage);
+    void statusUpdated();
+
 
 private:
 	int init_argc;
 	char** init_argv;
 	ros::Publisher chatter_publisher;
     QStringListModel logging_model;
+    QStringListModel status_model;
   ros::Subscriber chatter_subscriber;
   image_transport::Subscriber image_sub;
+  tf2_ros::Buffer buffer;
+  //tf2_ros::TransformListener listener(const tf2_ros::Buffer& buffer);
+
+
   void imageCallback(const sensor_msgs::ImageConstPtr& msg);
   QImage Mat2QImage(cv::Mat const& src);
   void chatter_callback(const std_msgs::String &msg);

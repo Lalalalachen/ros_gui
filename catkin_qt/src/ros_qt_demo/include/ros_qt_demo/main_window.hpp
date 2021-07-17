@@ -60,7 +60,6 @@ public Q_SLOTS:
     void updateLoggingView(); // no idea why this can't connect automatically
     void slot_update_image(QImage);
     void slot_sub_image();
-    void slot_quick_cmd_clicked();
     void slot_roscore_cmd_clicked();
     void slot_exit_roscore_clicked();
     void slot_roscore_output();
@@ -69,6 +68,7 @@ public Q_SLOTS:
     void slot_display_tf(int);
     void slot_display_rm(int);
     void slot_file_path();
+    void updateStatusView();
 
 private:
 	Ui::MainWindowDesign ui;
