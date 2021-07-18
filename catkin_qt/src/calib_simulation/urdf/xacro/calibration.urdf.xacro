@@ -1,0 +1,6 @@
+
+<robot name="calibration" xmlns:xacro="http://wiki.ros.org/xacro">
+    <xacro:include filename="calib_field.urdf.xacro" />
+    <xacro:include filename="calib_target.urdf.xacro" />
+    <xacro:include filename="calib_camera.urdf.xacro" />
+</robot>

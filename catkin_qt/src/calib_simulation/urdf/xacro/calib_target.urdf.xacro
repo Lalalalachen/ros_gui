@@ -1,0 +1,82 @@
+
+<robot name="field" xmlns:xacro="http://wiki.ros.org/xacro">
+
+    <!--this is the robot of calibration target, 
+    similar model with the real camera held by an endoscope is created for better observation of matching-->>
+
+    <link name="camera_target_position">
+        <visual>
+            <geometry>
+                <cylinder radius="0.01" length="0.01" />
+            </geometry>
+            <origin xyz="0 0 0" rpy="0 0 0" />
+            <material name="blue">
+                <color rgba="0.75 0.75 0.75 0.5" />
+            </material>
+        </visual>
+    </link>
+
+    <joint name="target2base_link" type="fixed">
+      <parent link="calib_field" />
+      <child link="camera_target_position" />
+      <!--arbitrary initial position, will be changed follow the tf provided-->
+      <origin xyz="0 1 0.5" rpy="0 1.57 0" />
+    </joint>
+
+    <link name="ta_endoscope">
+        <visual>
+            <geometry>
+                <cylinder radius="0.01" length="0.5" />
+            </geometry>
+            <material name="green">
+                <color rgba="0.75 0.75 0.75 0.5" />
+            </material>
+        </visual>
+    </link>
+
+    <joint name="ta_endoscope2target" type="fixed">
+      <parent link="camera_target_position" />
+      <child link="ta_endoscope" />
+       <!-- a 30 degree angle gap between camera and endoscope along the z axis of camera is calculated -->>
+      <origin xyz="0 0.125 -0.217" rpy="0.52 0 0" />
+    </joint>
+
+    <link name="ta_endoscope2">
+        <visual>
+            <geometry>
+                <cylinder radius="0.02" length="0.3" />
+            </geometry>
+            <material name="green">
+                <color rgba="0.75 0.75 0.75 0.5" />
+            </material>
+        </visual>
+    </link>
+
+    <joint name="ta_endoscope22target" type="fixed">
+      <parent link="ta_endoscope" />
+      <child link="ta_endoscope2" />
+      <origin xyz="0 0 -0.4" rpy="0 0 0" />
+    </joint>
+
+        <link name="ta_handle">
+       <visual>
+           <geometry>
+                <box size="0.02 0.04 0.1" />
+            </geometry>
+            <material name="blue">
+                <color rgba="0.75 0.75 0.75 0.5" />
+            </material>
+        </visual>
+    </link>
+
+    <joint name="ta_handle2ta_endoscope2" type="fixed">
+      <parent link="ta_endoscope2" />
+      <child link="ta_handle" />
+      <origin xyz="0 -0.02 -0.1" rpy="0 0 0" />
+    </joint>  
+
+
+
+
+
+</robot>

@@ -1,0 +1,80 @@
+
+<robot name="field" xmlns:xacro="http://wiki.ros.org/xacro">
+
+    <!--this is the robot of real camera held by an endoscope-->>
+
+    <link name="camera">
+        <visual>
+            <geometry>
+                <cylinder radius="0.01" length="0.01" />
+            </geometry>
+            <origin xyz="0 0 0" rpy="0 0 0" />
+            <material name="red">
+                <color rgba="0.75 0.75 0.75 1" />
+            </material>
+        </visual>
+    </link>
+
+    <joint name="camera2base_link" type="fixed">
+      <parent link="calib_field" />
+      <child link="camera" />
+      <!--arbitrary initial position, will be changed follow the tf provided-->
+      <origin xyz="0 0.25 0.433" rpy="0.52 0 0" />
+    </joint>
+
+
+    <link name="ca_endoscope">
+        <visual>
+            <geometry>
+                <cylinder radius="0.01" length="0.5" />
+            </geometry>
+            <material name="yellow">
+                <color rgba="0.5 0.85 0.81 1" />
+            </material>
+        </visual>
+    </link>
+
+    <joint name="ca_endoscope2camera" type="fixed">
+      <parent link="camera" />
+      <child link="ca_endoscope" />
+      <!-- a 30 degree angle gap between camera and endoscope along the z axis of camera is calculated -->>
+      <origin xyz="0 0.125 -0.217" rpy="0.52 0 0" />
+    </joint>
+
+    <link name="ca_endoscope2">
+        <visual>
+            <geometry>
+                <cylinder radius="0.02" length="0.3" />
+            </geometry>
+            <material name="yellow">
+                <color rgba="0.5 0.85 0.81 1" />
+            </material>
+        </visual>
+    </link>
+
+    <joint name="ca_endoscope22camera" type="fixed">
+      <parent link="ca_endoscope" />
+      <child link="ca_endoscope2" />
+      <origin xyz="0 0 -0.4" rpy="0 0 0" />
+    </joint>
+
+        <link name="ca_handle">
+       <visual>
+           <geometry>
+                <box size="0.02 0.04 0.1" />
+            </geometry>
+            <material name="red">
+                <color rgba="0.75 0.75 0.75 1" />
+            </material>
+        </visual>
+    </link>
+
+    <joint name="ca_handle2ca_endoscope2" type="fixed">
+      <parent link="ca_endoscope2" />
+      <child link="ca_handle" />
+      <origin xyz="0 -0.02 -0.1" rpy="0 0 0" />
+    </joint>   
+
+
+
+</robot>

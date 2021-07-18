@@ -70,7 +70,7 @@ MainWindow::MainWindow(int argc, char** argv, QWidget *parent)
     //fix frame
     QTreeWidgetItem* Fixed_frame = new QTreeWidgetItem(QStringList() << "Fixed Frame");
     fixed_box = new QComboBox();
-    fixed_box->addItem("map");
+    fixed_box->addItem("calib_field");
     fixed_box->setMaximumWidth(150);
     fixed_box->setEditable(true);
 
@@ -186,7 +186,9 @@ void MainWindow::slot_file_path() {
     //quick_cmd_bag->write("/mnt/hgfs/VM-Ubuntu/Calibration/record.bag");
     quick_cmd_bag->write(" -l\n");
 
-
+    quick_cmd = new QProcess();
+    quick_cmd->start("bash");
+    quick_cmd->write("roslaunch calib_simulation calibration.launch\n");
     quick_cmd_launch = new QProcess();
     quick_cmd_launch->start("bash");
     quick_cmd_launch->write("roslaunch temporary_calib_interface calib_vis_bag.launch\n");

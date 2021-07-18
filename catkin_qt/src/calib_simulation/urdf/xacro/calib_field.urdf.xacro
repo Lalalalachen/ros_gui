@@ -1,0 +1,23 @@
+
+<robot name="field" xmlns:xacro="http://wiki.ros.org/xacro">
+
+    <xacro:property name="field_length" value="2" /> 
+    <xacro:property name="field_width" value="2" />
+    <xacro:property name="field_height" value="0.01" />
+
+  
+    <link name="calib_field">
+        <visual>
+            <geometry>
+                <box size="${field_length} ${field_width} ${field_height}" />
+            </geometry>
+            <origin xyz="0 0 0" rpy="0 0 0" />
+            <material name="white">
+                <color rgba="0 0.2 0.3 0.5" />
+            </material>
+        </visual>
+    </link>
+
+
+
+</robot>
