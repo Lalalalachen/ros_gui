@@ -144,7 +144,8 @@ MainWindow::MainWindow(int argc, char** argv, QWidget *parent)
     //bag file path
     connect(ui.pushButton_path, SIGNAL(clicked()), this, SLOT(slot_file_path()));
 
-    //append status info
+    //tf threshold
+    connect(ui.pushButton_threshold, SIGNAL(clicked()), this, SLOT(slot_change_threshold()));
 
 
 }
@@ -154,6 +155,17 @@ MainWindow::~MainWindow() {}
 /*****************************************************************************
 ** Implementation [Slots]
 *****************************************************************************/
+void MainWindow::slot_change_threshold() {
+  //double trans_threshold = ui.lineEdit_trans->text().toDouble();
+  //double rot_threshold = ui.lineEdit_trans->text().toDouble();
+  qnode.tx = ui.lineEdit_tx->text().toDouble();
+  qnode.ty = ui.lineEdit_ty->text().toDouble();
+  qnode.tz = ui.lineEdit_tz->text().toDouble();
+  qnode.rx = ui.lineEdit_rx->text().toDouble();
+  qnode.ry = ui.lineEdit_ry->text().toDouble();
+  qnode.rz = ui.lineEdit_rz->text().toDouble();
+  qnode.rw = ui.lineEdit_rw->text().toDouble();
+}
 
 void MainWindow::slot_file_path() {
   QString bag_file, bag_file_path;

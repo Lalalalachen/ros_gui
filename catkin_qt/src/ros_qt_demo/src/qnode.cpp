@@ -175,13 +175,13 @@ void QNode::run() {
 
       //double t_error = 1.0; // translation error
       //double r_error = 1.0; // rotation error
-      if(abs(tfs.transform.translation.x) < t_error &&
-         abs(tfs.transform.translation.y) < t_error &&
-         abs(tfs.transform.translation.z) < t_error &&
-         abs(tfs.transform.rotation.x) < r_error &&
-         abs(tfs.transform.rotation.y) < r_error &&
-         abs(tfs.transform.rotation.z) < r_error &&
-         abs(tfs.transform.rotation.w) < r_error ) {
+      if(abs(tfs.transform.translation.x) < tx &&
+         abs(tfs.transform.translation.y) < ty &&
+         abs(tfs.transform.translation.z) < tz &&
+         abs(tfs.transform.rotation.x) < rx &&
+         abs(tfs.transform.rotation.y) < ry &&
+         abs(tfs.transform.rotation.z) < rz &&
+         abs(tfs.transform.rotation.w) < rw ) {
         st << "Reach the target!" << count;
         status(Reach, st.str());
       }

@@ -69,6 +69,7 @@ public Q_SLOTS:
     void slot_display_rm(int);
     void slot_file_path();
     void updateStatusView();
+    void slot_change_threshold();
 
 private:
 	Ui::MainWindowDesign ui;

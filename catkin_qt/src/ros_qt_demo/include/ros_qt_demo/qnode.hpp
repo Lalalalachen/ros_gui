@@ -62,8 +62,13 @@ public:
   };
   QStringListModel* statusModel() { return &status_model; }
   void status( const Status &status, const std::string &st);
-  double t_error = 0.5; // translation error
-  double r_error = 0.5; // rotation error
+  double tx = 0.5; // translation error
+  double ty = 0.5; // translation error
+  double tz = 0.5; // translation error
+  double rx = 0.5; // rotation error
+  double ry = 0.5; // rotation error
+  double rz = 0.5; // rotation error
+  double rw = 0.5; // rotation error
 	void run();
 
 	/*********************
