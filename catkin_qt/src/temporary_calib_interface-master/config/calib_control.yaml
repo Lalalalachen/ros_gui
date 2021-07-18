@@ -1,0 +1,10 @@
+robot_command_buttons:
+  - name: "Run"
+    type: emptysrv
+    srv: "/calibration_run"
+  - name: "Commit"
+    type: emptysrv
+    srv: "/calibration_commit"
+  - name: "Clear"
+    type: emptysrv
+    srv: "/calibration_clear"

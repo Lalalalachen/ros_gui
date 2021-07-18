@@ -1,0 +1,6 @@
+<?xml version="1.0"?>
+<launch>
+  <arg name="camera_left" default="camera5" />
+  <arg name="camera_right" default="camera4" />
+  <node pkg="temporary_calib_interface" type="calib_view" name="calib_view" args="$(arg camera_left) $(arg camera_right)" output="screen"/>
+</launch>
